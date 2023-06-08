@@ -8,7 +8,7 @@ Apellido: Saltos Vivero
 
 telélefono: 09678512364
 
-Correo:msaltosv@est.ups.edu.ec
+Correo:ssaltos@est.ups.edu.ec
 
 ### Estudios Realizados
 
