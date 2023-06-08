@@ -1,3 +1,2 @@
 #  Curriculum Vitae
-
- Veremos el curriculo de la estudiante Melanie yujuuuuuuu:3
+Veremos el currículo de la estudiante Melanie yujuuu:3
