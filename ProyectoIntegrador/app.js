@@ -11,6 +11,16 @@ app.use(bodyParser.urlencoded({extended:false}))
 
 app.use(express.static(path.join(__dirname, 'public')))
 
+const mongo_urli= 'mongodb+srv://msaltosv:12345melanie@cluster0.qgyrcfv.mongodb.net/?retryWrites=true&w=majority'
+
+mongoose.connect(mongo_urli, function(err){
+    if (err){
+        throw err;
+    }else {
+        console.log(`Successfully connected to ${mongo_urli} `)
+    }
+})
+
 app.get('/', (req,res)=>{
 })
 
