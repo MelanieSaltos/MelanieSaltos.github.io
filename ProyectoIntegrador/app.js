@@ -24,7 +24,7 @@ mongoose.connect(mongo_urli, function(err){
 app.get('/', (req,res)=>{
 })
 
-app.listen(3000,()=>{
+app.listen(3000,() =>{
     console.log('server started')
 })
-module.exports=app;
+module.exports=app
