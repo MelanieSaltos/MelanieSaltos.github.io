@@ -1,71 +1,62 @@
-if(process.env.NODE_ENV !== 'production'){
-    require('dotenv').config();
-}
-const express = require('express');
-const cookieParser = require('cookie-parser');
-const bodyParser = require('body-parser');
+const express =require('express');
+const path =require('path');
+const bodyParser =require('body-parser');
+const app= express();
+
+const bcrypt = require('bcrypt');
 const mongoose = require('mongoose');
-const User = require('./user');
-const jwt = require('jsonwebtoken');
-const middleware = require('./middleware');
+const User   = require('./user ');
 
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({extended:false}))
 
-const app = express();
+app.use(express.static(path.join(__dirname, 'public')))
 
-app.use(bodyParser.json()); 
-app.use(bodyParser.urlencoded({extended: true}));
-app.use(express.static('public'));
-app.use(cookieParser());
+const mongo_urli= 'mongodb+srv://msaltosv:12345melanie@cluster0.qgyrcfv.mongodb.net/?retryWrites=true&w=majority';
 
-const mongo_uri = 'mongodb://dev:dev@localhost/todos';
-mongoose.connect(mongo_uri, function(err) {
-  if (err) {
-    throw err;
-  } else {
-    console.log(`Successfully connected to ${mongo_uri}`);
-  }
+mongoose.connect(mongo_urli, function(err){
+    if (err){
+        throw err;
+    }else {
+        console.log(`Successfully connected to ${mongo_urli} `);
+    }
 });
 
+app.post('/register', (req,res)=>{
+    const{username, password}=req.body;
 
-
-app.post('/register', (req, res) =>{
-    const {username, password} = req.body;
-
-    const user = new User({username, password});
-
-    user.save(err =>{
-        if(err){
-            res.status(500).send('Error NOT FOUND');
-        }else{
-            res.status(200).send('USUARIO REGISTRADO');
+    const user= new User({username, password});
+    user.save(err=>{
+        if (err) {
+            res.status(500).send('ERROR AL REGISTRAR EL USER')
+        } else {
+            res.status(200).send(' USUARIO REGISTRAR CORRECTAMENTE')
         }
     });
 });
 
-app.post('/authenticate', (req, res) =>{
-    const {username, password} = req.body;
-
-    User.findOne({username}, (err, user) =>{
-        if(err){
-            console.log('error');
-        }else if(!user){
-            console.log('no se encontró el usuario');
+app.post('/authenticate', (req,res)=>{
+    const{username, password}=req.body;
+    User.FindOne({username}, (err,user)=>{
+        if (err) {
+            res.status(500).send('ERROR AL AUTENTIFICAR AL USUARIO')
+        } else if(!user){
+            res.status(200).send(' EL USUARIO EXISTE')
         }else{
-            user.isCorrectPassword(password, (err, result) =>{
-                const payload = {username};
-                const token = jwt.sign(username, process.env.SECRET);
-                
-                res.cookie('token', token, {httpOnly: true}).sendStatus(200);
-            
+            user.isCorrectPassword(password, (err, result)=>{
+                if (err) {
+                    res.status(500).send('ERROR AL AUTENTIFICAR AL USUARIO')
+                }else  if(result){
+                    res.status(200).send(' USUARIO AUTENTIFICADO CORRECTAMENTE')
+                }else{
+                    res.status(500).send('USUARIO O CONTRASEÑA INCORRECTA')
+                }
             });
         }
-    });
+    })
 });
 
-app.get('/dashboard', middleware, (req, res) =>{
-    res.send('Bienvenido');
+app.listen(3000,() =>{
+    console.log('server started');
 });
-
-app.listen(3000, () =>{
-    console.log('Servidor iniciado...');
-})
+module.exports=app
