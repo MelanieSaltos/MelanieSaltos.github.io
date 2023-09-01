@@ -12,7 +12,7 @@ app.use(bodyParser.urlencoded({extended:false}))
 
 app.use(express.static(path.join(__dirname, 'public')))
 
-const mongo_urli= 'mongodb+srv://msaltosv:12345melanie@cluster0.qgyrcfv.mongodb.net/?retryWrites=true&w=majority';
+const mongo_urli= 'mongodb+srv://msaltosv:12345@cluster0.qgyrcfv.mongodb.net/?retryWrites=true&w=majority'
 
 mongoose.connect(mongo_urli, function(err){
     if (err){
